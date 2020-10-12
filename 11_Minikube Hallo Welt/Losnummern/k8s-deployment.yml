@@ -1,0 +1,39 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: losnummern
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: losnummern-label
+  template:
+    metadata:
+      labels:
+        app: losnummern-label
+    spec:
+      containers:
+      - name: losnummern-container
+        image: hoehne/number-generator:Losnummern-1
+        resources:
+           limits:
+              cpu: "0.2"
+           requests:
+              cpu: "0.1"
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: losnummern-service
+spec:
+  selector:
+    app: losnummern-label
+  ports:
+  - protocol: TCP
+    port: 8080
+    nodePort: 30000
+  type: NodePort 
